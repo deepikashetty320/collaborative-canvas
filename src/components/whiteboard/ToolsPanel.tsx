@@ -1,9 +1,8 @@
-import { Pencil, Eraser, Trash2 } from 'lucide-react';
+import { Pen, Eraser, Trash2 } from 'lucide-react';
 import { ToolType } from '@/types/whiteboard';
 import { ToolButton } from './ToolButton';
 import { ColorPicker } from './ColorPicker';
 import { BrushSizeSlider } from './BrushSizeSlider';
-import { cn } from '@/lib/utils';
 
 interface ToolsPanelProps {
   activeTool: ToolType;
@@ -25,34 +24,40 @@ export const ToolsPanel = ({
   onClear,
 }: ToolsPanelProps) => {
   return (
-    <aside 
-      className={cn(
-        'flex flex-col items-center gap-2 p-3',
-        'bg-toolbar border-l border-toolbar-border',
-        'shadow-toolbar h-full'
-      )}
-    >
-      <div className="flex flex-col items-center gap-1 pb-3 border-b border-toolbar-border">
-        <ToolButton
-          icon={Pencil}
-          label="Pen"
-          isActive={activeTool === 'pen'}
-          onClick={() => onToolChange('pen')}
-        />
-        <ToolButton
-          icon={Eraser}
-          label="Eraser"
-          isActive={activeTool === 'eraser'}
-          onClick={() => onToolChange('eraser')}
-        />
-      </div>
-
-      <div className="flex flex-col items-center gap-1 py-3 border-b border-toolbar-border">
+    <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10">
+      <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-3 flex flex-col items-center gap-1">
+        {/* Drawing Tools Section */}
+        <div className="space-y-1">
+          <ToolButton
+            icon={Pen}
+            label="Pen"
+            isActive={activeTool === 'pen'}
+            onClick={() => onToolChange('pen')}
+          />
+          <ToolButton
+            icon={Eraser}
+            label="Eraser"
+            isActive={activeTool === 'eraser'}
+            onClick={() => onToolChange('eraser')}
+          />
+        </div>
+        
+        {/* Divider */}
+        <div className="w-10 h-px bg-gradient-to-r from-transparent via-border to-transparent my-2" />
+        
+        {/* Color Picker */}
         <ColorPicker color={color} onChange={onColorChange} />
+        
+        {/* Divider */}
+        <div className="w-10 h-px bg-gradient-to-r from-transparent via-border to-transparent my-2" />
+        
+        {/* Brush Size */}
         <BrushSizeSlider size={brushSize} onChange={onBrushSizeChange} />
-      </div>
-
-      <div className="flex flex-col items-center gap-1 pt-3 mt-auto">
+        
+        {/* Divider */}
+        <div className="w-10 h-px bg-gradient-to-r from-transparent via-border to-transparent my-2" />
+        
+        {/* Clear Button */}
         <ToolButton
           icon={Trash2}
           label="Clear"
@@ -60,6 +65,6 @@ export const ToolsPanel = ({
           variant="destructive"
         />
       </div>
-    </aside>
+    </div>
   );
 };
