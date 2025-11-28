@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Circle } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
 
 interface BrushSizeSliderProps {
   size: number;
   onChange: (size: number) => void;
 }
-
-const MIN_SIZE = 1;
-const MAX_SIZE = 30;
 
 export const BrushSizeSlider = ({ size, onChange }: BrushSizeSliderProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,23 +16,22 @@ export const BrushSizeSlider = ({ size, onChange }: BrushSizeSliderProps) => {
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
           'group flex flex-col items-center justify-center',
-          'w-14 h-14 rounded-xl transition-all duration-200',
-          'hover:bg-tool-hover border-2 border-transparent'
+          'w-14 h-14 rounded-2xl transition-all duration-200',
+          'hover:bg-gradient-to-br hover:from-slate-100 hover:to-slate-50'
         )}
-        title={`Size: ${size}px`}
+        title="Brush Size"
       >
-        <div className="relative flex items-center justify-center w-5 h-5">
-          <Circle 
-            className="text-muted-foreground group-hover:text-foreground transition-colors"
+        <div className="relative flex items-center justify-center w-7 h-7">
+          <div 
+            className="rounded-full bg-foreground transition-all duration-200 shadow-sm"
             style={{ 
-              width: Math.max(8, Math.min(20, size * 0.7)),
-              height: Math.max(8, Math.min(20, size * 0.7)),
+              width: `${Math.max(6, Math.min(size * 1.5, 20))}px`,
+              height: `${Math.max(6, Math.min(size * 1.5, 20))}px`
             }}
-            fill="currentColor"
           />
         </div>
-        <span className="text-[10px] mt-1 font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-          Size
+        <span className="text-[10px] mt-1 font-semibold text-muted-foreground group-hover:text-foreground transition-colors">
+          {size}px
         </span>
       </button>
 
@@ -46,37 +42,40 @@ export const BrushSizeSlider = ({ size, onChange }: BrushSizeSliderProps) => {
             onClick={() => setIsOpen(false)}
           />
           <div className="absolute left-full ml-3 top-0 z-50 animate-slide-in">
-            <div className="bg-toolbar border border-toolbar-border rounded-xl p-4 shadow-toolbar min-w-[180px]">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-sm font-medium text-foreground">Brush Size</span>
-                <span className="text-sm text-muted-foreground">{size}px</span>
+            <div className="bg-white/95 backdrop-blur-xl border border-white/50 rounded-2xl p-4 shadow-2xl min-w-[180px]">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-xs font-semibold text-muted-foreground">Brush Size</span>
+                <span className="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full">{size}px</span>
               </div>
-              
-              <input
-                type="range"
-                min={MIN_SIZE}
-                max={MAX_SIZE}
-                value={size}
-                onChange={(e) => onChange(Number(e.target.value))}
-                className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+              <Slider
+                value={[size]}
+                onValueChange={(value) => onChange(value[0])}
+                min={1}
+                max={50}
+                step={1}
+                className="w-full"
               />
-              
-              <div className="flex justify-between mt-2 text-xs text-muted-foreground">
-                <span>{MIN_SIZE}px</span>
-                <span>{MAX_SIZE}px</span>
-              </div>
-
-              {/* Preview */}
-              <div className="mt-4 pt-4 border-t border-toolbar-border">
-                <div className="flex items-center justify-center h-10">
-                  <div 
-                    className="rounded-full bg-foreground"
-                    style={{ 
-                      width: size,
-                      height: size,
-                    }}
-                  />
-                </div>
+              <div className="flex items-center justify-center gap-3 mt-4 pt-3 border-t border-border/50">
+                {[2, 8, 16, 32].map((presetSize) => (
+                  <button
+                    key={presetSize}
+                    onClick={() => onChange(presetSize)}
+                    className={cn(
+                      'flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200',
+                      'hover:bg-slate-100',
+                      size === presetSize && 'bg-primary/10 ring-1 ring-primary/30'
+                    )}
+                    title={`${presetSize}px`}
+                  >
+                    <div 
+                      className="rounded-full bg-foreground"
+                      style={{ 
+                        width: `${Math.max(4, presetSize * 0.5)}px`,
+                        height: `${Math.max(4, presetSize * 0.5)}px`
+                      }}
+                    />
+                  </button>
+                ))}
               </div>
             </div>
           </div>

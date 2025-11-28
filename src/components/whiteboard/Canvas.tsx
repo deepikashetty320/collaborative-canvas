@@ -39,14 +39,11 @@ export const Canvas = ({
       
       // Resize canvas
       const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
       
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      canvas.width = rect.width;
+      canvas.height = rect.height;
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${rect.height}px`;
-      
-      ctx.scale(dpr, dpr);
       
       // Restore drawing (scaled)
       ctx.putImageData(imageData, 0, 0);
@@ -57,16 +54,14 @@ export const Canvas = ({
     const container = containerRef.current;
     if (canvas && container) {
       const rect = container.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
       
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
+      canvas.width = rect.width;
+      canvas.height = rect.height;
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${rect.height}px`;
       
       const ctx = canvas.getContext('2d');
       if (ctx) {
-        ctx.scale(dpr, dpr);
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, rect.width, rect.height);
       }
@@ -79,24 +74,25 @@ export const Canvas = ({
   return (
     <div 
       ref={containerRef}
-      className="flex-1 relative bg-canvas overflow-hidden"
+      className="flex-1 relative overflow-hidden m-4 mr-24 rounded-3xl shadow-2xl"
     >
-      {/* Grid pattern background */}
-      <div 
-        className="absolute inset-0 opacity-30 pointer-events-none"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, hsl(var(--border)) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(var(--border)) 1px, transparent 1px)
-          `,
-          backgroundSize: '20px 20px',
-        }}
-      />
+      {/* Canvas background with subtle pattern */}
+      <div className="absolute inset-0 bg-white">
+        <div 
+          className="absolute inset-0 opacity-[0.4]"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 1px 1px, hsl(220 13% 80%) 1px, transparent 0)
+            `,
+            backgroundSize: '24px 24px',
+          }}
+        />
+      </div>
       
       <canvas
         ref={canvasRef}
         className={cn(
-          'absolute inset-0 touch-none',
+          'absolute inset-0 touch-none z-10',
           tool === 'pen' && 'cursor-crosshair',
           tool === 'eraser' && 'cursor-cell'
         )}
