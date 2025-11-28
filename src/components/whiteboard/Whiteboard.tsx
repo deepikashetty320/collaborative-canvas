@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 
 export const Whiteboard = () => {
   const { isConnected, emitDraw, emitClear, onDraw, onClear } = useSocket();
-  
+
   const {
     canvasRef,
     startDrawing,
@@ -19,16 +19,18 @@ export const Whiteboard = () => {
     setTool,
     setColor,
     setBrushSize,
+    undo,
+    redo,
     tool,
     color,
     brushSize,
+    cursorPosition,
   } = useCanvas({
     onDraw: (data) => {
       emitDraw(data);
     },
   });
 
-  // Set up socket listeners
   useEffect(() => {
     onDraw((data) => {
       drawFromRemote(data);
@@ -54,15 +56,23 @@ export const Whiteboard = () => {
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-tr from-blue-500/10 to-cyan-500/10 rounded-full blur-3xl" />
       </div>
 
+      {/* Floating "Deep Boards" Title */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0">
+        <h1 className="text-[12rem] font-black tracking-tight opacity-[0.03] select-none whitespace-nowrap">
+          Deep Boards
+        </h1>
+      </div>
+
       {/* Header */}
       <div className="absolute top-4 left-4 z-10 flex items-center gap-4">
-        <div className="flex items-center gap-3 bg-white/80 backdrop-blur-xl px-5 py-3 rounded-2xl shadow-lg border border-white/50">
-          <div className="w-10 h-10 bg-gradient-to-br from-primary to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
-            <svg 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              className="w-5 h-5 text-white"
-              stroke="currentColor" 
+        <div className="flex items-center gap-3 bg-white/90 backdrop-blur-xl px-6 py-3 rounded-2xl shadow-lg border-2 border-white/60">
+          <div className="w-12 h-12 bg-gradient-to-br from-primary via-purple-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              className="w-6 h-6 text-white relative z-10"
+              stroke="currentColor"
               strokeWidth="2"
             >
               <path d="M12 19l7-7 3 3-7 7-3-3z" />
@@ -72,19 +82,41 @@ export const Whiteboard = () => {
             </svg>
           </div>
           <div>
-            <h1 className="text-base font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-              Whiteboard
+            <h1 className="text-lg font-black bg-gradient-to-r from-gray-900 via-gray-700 to-gray-600 bg-clip-text text-transparent tracking-tight">
+              Deep Boards
             </h1>
-            <p className="text-[11px] text-muted-foreground font-medium">Real-time collaboration</p>
+            <p className="text-[11px] text-muted-foreground font-semibold">Real-time collaboration</p>
           </div>
         </div>
         <ConnectionStatus isConnected={isConnected} />
+      </div>
+
+      {/* Keyboard Shortcuts Hint */}
+      <div className="absolute bottom-4 left-4 z-10 bg-white/90 backdrop-blur-xl px-4 py-2 rounded-xl shadow-lg border-2 border-white/60">
+        <div className="flex items-center gap-3 text-xs">
+          <div className="flex items-center gap-1">
+            <kbd className="px-2 py-1 bg-gray-100 rounded text-[10px] font-semibold border border-gray-300">Ctrl</kbd>
+            <span className="text-muted-foreground">+</span>
+            <kbd className="px-2 py-1 bg-gray-100 rounded text-[10px] font-semibold border border-gray-300">Z</kbd>
+            <span className="text-muted-foreground font-medium ml-1">Undo</span>
+          </div>
+          <div className="w-px h-4 bg-border" />
+          <div className="flex items-center gap-1">
+            <kbd className="px-2 py-1 bg-gray-100 rounded text-[10px] font-semibold border border-gray-300">Ctrl</kbd>
+            <span className="text-muted-foreground">+</span>
+            <kbd className="px-2 py-1 bg-gray-100 rounded text-[10px] font-semibold border border-gray-300">Y</kbd>
+            <span className="text-muted-foreground font-medium ml-1">Redo</span>
+          </div>
+        </div>
       </div>
 
       {/* Canvas Area */}
       <Canvas
         canvasRef={canvasRef}
         tool={tool}
+        brushSize={brushSize}
+        color={color}
+        cursorPosition={cursorPosition}
         onMouseDown={startDrawing}
         onMouseMove={draw}
         onMouseUp={stopDrawing}
@@ -102,6 +134,8 @@ export const Whiteboard = () => {
         onColorChange={setColor}
         onBrushSizeChange={setBrushSize}
         onClear={handleClear}
+        onUndo={undo}
+        onRedo={redo}
       />
     </div>
   );

@@ -1,4 +1,4 @@
-export type ToolType = 'pen' | 'eraser';
+export type ToolType = 'pen' | 'eraser' | 'rectangle' | 'circle' | 'line' | 'text';
 
 export interface Point {
   x: number;
@@ -11,11 +11,24 @@ export interface DrawData {
   color: string;
   brushSize: number;
   tool: ToolType;
+  text?: string;
+  width?: number;
+  height?: number;
 }
 
 export interface CanvasState {
   isDrawing: boolean;
   lastPosition: Point | null;
+  startPosition: Point | null;
+  previewCanvas?: HTMLCanvasElement;
+  textInput?: {
+    position: Point;
+    text: string;
+  };
+}
+
+export interface HistoryState {
+  canvasData: ImageData;
 }
 
 export interface ToolsState {
