@@ -71,7 +71,7 @@ export const ToolsPanel = ({
         cursor: isDragging ? 'grabbing' : 'auto',
       }}
     >
-      <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/60 p-4 flex flex-col gap-3 max-h-[85vh] overflow-y-auto">
+      <div className="bg-card/80 dark:bg-card/90 backdrop-blur-xl rounded-2xl shadow-xl border border-border/40 p-4 flex flex-col gap-3 max-h-[85vh] overflow-y-auto">
         {/* Drag Handle */}
         <div 
           className="flex justify-center items-center py-1 -mt-1 mb-1 cursor-grab active:cursor-grabbing select-none group"
