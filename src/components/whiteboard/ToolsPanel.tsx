@@ -1,9 +1,10 @@
-import { Pencil, Eraser, Trash2, Square, Circle, Minus, Type, Undo2, Redo2, Download, FileText, Palette, PenTool } from 'lucide-react';
+import { Pencil, Eraser, Trash2, Square, Circle, Minus, Type, Undo2, Redo2, Download, FileText, GripHorizontal } from 'lucide-react';
 import { ToolType } from '@/types/whiteboard';
 import { ToolButton } from './ToolButton';
 import { ColorPicker } from './ColorPicker';
 import { BrushSizeSlider } from './BrushSizeSlider';
 import { jsPDF } from 'jspdf';
+import { useDraggable } from '@/hooks/useDraggable';
 
 interface ToolsPanelProps {
   activeTool: ToolType;
@@ -30,6 +31,11 @@ export const ToolsPanel = ({
   onRedo,
   canvasRef,
 }: ToolsPanelProps) => {
+  const { position, isDragging, elementRef, handleMouseDown } = useDraggable({
+    initialPosition: { x: window.innerWidth - 200, y: window.innerHeight / 2 - 200 },
+    storageKey: 'deep-boards-tools-position',
+    boundToViewport: true,
+  });
   const handleDownloadPNG = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -56,8 +62,27 @@ export const ToolsPanel = ({
   };
 
   return (
-    <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10">
+    <div 
+      ref={elementRef}
+      className="fixed z-10"
+      style={{
+        left: position.x,
+        top: position.y,
+        cursor: isDragging ? 'grabbing' : 'auto',
+      }}
+    >
       <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-xl border border-white/60 p-4 flex flex-col gap-3 max-h-[85vh] overflow-y-auto">
+        {/* Drag Handle */}
+        <div 
+          className="flex justify-center items-center py-1 -mt-1 mb-1 cursor-grab active:cursor-grabbing select-none group"
+          onMouseDown={handleMouseDown}
+        >
+          <div className="flex gap-1 items-center px-4 py-1 rounded-full bg-muted/50 group-hover:bg-muted transition-colors">
+            <GripHorizontal className="w-4 h-4 text-muted-foreground" />
+            <span className="text-[10px] text-muted-foreground font-medium">Drag</span>
+          </div>
+        </div>
+
         {/* Undo/Redo Bar */}
         <div className="flex justify-center gap-2 pb-2 border-b border-border/30">
           <ToolButton
