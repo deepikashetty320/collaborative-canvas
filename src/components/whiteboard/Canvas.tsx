@@ -88,12 +88,12 @@ export const Canvas = ({
       onMouseLeave={() => setShowCursor(false)}
     >
       {/* Canvas background with subtle pattern */}
-      <div className="absolute inset-0 bg-white">
+      <div className="absolute inset-0 bg-canvas dark:bg-canvas">
         <div
-          className="absolute inset-0 opacity-[0.4]"
+          className="absolute inset-0 opacity-[0.4] dark:opacity-[0.2]"
           style={{
             backgroundImage: `
-              radial-gradient(circle at 1px 1px, hsl(220 13% 80%) 1px, transparent 0)
+              radial-gradient(circle at 1px 1px, hsl(var(--muted-foreground) / 0.3) 1px, transparent 0)
             `,
             backgroundSize: '24px 24px',
           }}

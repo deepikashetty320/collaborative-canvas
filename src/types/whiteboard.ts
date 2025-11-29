@@ -37,8 +37,28 @@ export interface ToolsState {
   brushSize: number;
 }
 
+// Chat types
+export interface ChatMessage {
+  id: string;
+  userId: string;
+  username: string;
+  text: string;
+  timestamp: number;
+}
+
+// Room types
+export interface Room {
+  id: string;
+  name: string;
+  userCount: number;
+}
+
 // Socket events
 export type SocketEvents = {
   draw: DrawData;
   clear: void;
+  chat: ChatMessage;
+  'join-room': { roomId: string; username: string };
+  'leave-room': { roomId: string };
+  'room-users': { roomId: string; users: string[] };
 };
