@@ -63,31 +63,40 @@ export const Whiteboard = () => {
         </h1>
       </div>
 
-      {/* Header */}
-      <div className="absolute top-4 left-4 z-10 flex items-center gap-4">
-        <div className="flex items-center gap-3 bg-white/90 backdrop-blur-xl px-6 py-3 rounded-2xl shadow-lg border-2 border-white/60">
-          <div className="w-12 h-12 bg-gradient-to-br from-primary via-purple-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent" />
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              className="w-6 h-6 text-white relative z-10"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M12 19l7-7 3 3-7 7-3-3z" />
-              <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
-              <path d="M2 2l7.586 7.586" />
-              <circle cx="11" cy="11" r="2" />
-            </svg>
-          </div>
-          <div>
-            <h1 className="text-lg font-black bg-gradient-to-r from-gray-900 via-gray-700 to-gray-600 bg-clip-text text-transparent tracking-tight">
-              Deep Boards
-            </h1>
-            <p className="text-[11px] text-muted-foreground font-semibold">Real-time collaboration</p>
+      {/* Glassmorphism Title Bar - Top Center */}
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 animate-fade-in">
+        <div className="relative px-8 py-4 rounded-2xl bg-white/25 backdrop-blur-xl border border-white/40 shadow-2xl">
+          {/* Glow effect */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/10 via-purple-500/10 to-blue-500/10 blur-xl -z-10" />
+          
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary via-purple-600 to-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/30 to-transparent" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                className="w-6 h-6 text-white relative z-10"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M12 19l7-7 3 3-7 7-3-3z" />
+                <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z" />
+                <path d="M2 2l7.586 7.586" />
+                <circle cx="11" cy="11" r="2" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="text-2xl font-black bg-gradient-to-r from-gray-900 via-primary to-purple-700 bg-clip-text text-transparent tracking-tight">
+                Deep Boards
+              </h1>
+              <p className="text-xs text-muted-foreground font-medium">Real-time collaborative whiteboard</p>
+            </div>
           </div>
         </div>
+      </div>
+
+      {/* Connection Status - Top Left */}
+      <div className="absolute top-6 left-6 z-10">
         <ConnectionStatus isConnected={isConnected} />
       </div>
 
@@ -136,6 +145,7 @@ export const Whiteboard = () => {
         onClear={handleClear}
         onUndo={undo}
         onRedo={redo}
+        canvasRef={canvasRef}
       />
     </div>
   );
